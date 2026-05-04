@@ -1,0 +1,9 @@
+{
+  "name": "lead-extractor",
+  "version": "1.0.0",
+  "description": "Sistema de prospecção de leads para vendas de consórcio",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}
