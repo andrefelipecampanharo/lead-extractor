@@ -8,193 +8,70 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --gold: #C9A84C;
-      --gold-light: #E8C96A;
-      --gold-dim: rgba(201,168,76,0.1);
-      --dark: #0A0A0A;
-      --dark2: #111111;
-      --dark3: #181818;
-      --dark4: #202020;
-      --border: rgba(201,168,76,0.15);
-      --border2: rgba(201,168,76,0.3);
-      --text: #F0EBE0;
-      --muted: #5A5550;
-      --mono: 'DM Mono', monospace;
-      --sans: 'Syne', sans-serif;
+      --gold: #C9A84C; --gold-light: #E8C96A; --gold-dim: rgba(201,168,76,0.1);
+      --dark: #0A0A0A; --dark2: #111111; --dark3: #181818; --dark4: #202020;
+      --border: rgba(201,168,76,0.15); --border2: rgba(201,168,76,0.3);
+      --text: #F0EBE0; --muted: #5A5550;
+      --mono: 'DM Mono', monospace; --sans: 'Syne', sans-serif;
     }
-
     html, body { height: 100%; background: var(--dark); color: var(--text); font-family: var(--sans); }
-
     body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none; z-index: 0;
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+      background-size: 60px 60px; pointer-events: none; z-index: 0;
     }
-
-    /* Loading overlay */
-    #loading {
-      position: fixed; inset: 0; background: var(--dark);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 999; flex-direction: column; gap: 12px;
-    }
-    #loading .spin {
-      width: 32px; height: 32px;
-      border: 2px solid var(--border2);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    #loading { position: fixed; inset: 0; background: var(--dark); display: flex; align-items: center; justify-content: center; z-index: 999; flex-direction: column; gap: 12px; }
+    #loading .spin { width: 32px; height: 32px; border: 2px solid var(--border2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
     #loading p { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
-
-    /* TOPBAR */
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1rem 2rem;
-      border-bottom: 0.5px solid var(--border);
-      background: rgba(10,10,10,0.9);
-      backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 10;
-    }
-
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; border-bottom: 0.5px solid var(--border); background: rgba(10,10,10,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
     .topbar-left { display: flex; align-items: center; gap: 12px; }
     .topbar-logo { font-size: 16px; font-weight: 800; color: var(--gold); letter-spacing: -0.02em; }
-    .topbar-badge {
-      font-family: var(--mono); font-size: 9px;
-      background: var(--gold-dim); border: 0.5px solid var(--border2);
-      color: var(--gold); padding: 3px 8px; border-radius: 4px;
-      letter-spacing: 0.1em; text-transform: uppercase;
-    }
-
+    .topbar-badge { font-family: var(--mono); font-size: 9px; background: var(--gold-dim); border: 0.5px solid var(--border2); color: var(--gold); padding: 3px 8px; border-radius: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
     .topbar-right { display: flex; align-items: center; gap: 12px; }
     .user-email { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-    .logout-btn {
-      font-family: var(--mono); font-size: 10px;
-      background: transparent; border: 0.5px solid var(--border);
-      color: var(--muted); padding: 6px 12px; border-radius: 5px;
-      cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase;
-      transition: all 0.15s;
-    }
+    .logout-btn { font-family: var(--mono); font-size: 10px; background: transparent; border: 0.5px solid var(--border); color: var(--muted); padding: 6px 12px; border-radius: 5px; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.15s; }
     .logout-btn:hover { color: var(--gold); border-color: var(--border2); }
-
-    /* MAIN */
     .main { padding: 2rem; max-width: 900px; margin: 0 auto; }
-
     .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4px; }
     .page-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 2rem; }
-
-    /* CONFIGURADOR */
-    .config-card {
-      background: var(--dark2);
-      border: 0.5px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .config-title {
-      font-family: var(--mono); font-size: 10px;
-      color: var(--gold); letter-spacing: 0.14em;
-      text-transform: uppercase; margin-bottom: 1rem;
-    }
-
+    .config-card { background: var(--dark2); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .config-title { font-family: var(--mono); font-size: 10px; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1rem; }
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-
     .field { display: flex; flex-direction: column; gap: 6px; }
     .field label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-
-    .field input, .field select {
-      background: var(--dark3); border: 0.5px solid rgba(255,255,255,0.07);
-      border-radius: 7px; padding: 11px 12px;
-      font-family: var(--mono); font-size: 12px; color: var(--text);
-      outline: none; transition: border 0.2s;
-      appearance: none; -webkit-appearance: none; width: 100%;
-    }
+    .field input, .field select { background: var(--dark3); border: 0.5px solid rgba(255,255,255,0.07); border-radius: 7px; padding: 11px 12px; font-family: var(--mono); font-size: 12px; color: var(--text); outline: none; transition: border 0.2s; appearance: none; -webkit-appearance: none; width: 100%; }
     .field input:focus, .field select:focus { border-color: var(--gold); }
     .field input::placeholder { color: var(--muted); }
-
     .sel-wrap { position: relative; }
     .sel-wrap::after { content: '▾'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 10px; pointer-events: none; }
-
-    /* TABS TIPO SCRIPT */
     .tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
-    .tab {
-      font-family: var(--mono); font-size: 10px; text-transform: uppercase;
-      letter-spacing: 0.08em; padding: 7px 14px; border-radius: 5px;
-      border: 0.5px solid var(--border); background: transparent;
-      color: var(--muted); cursor: pointer; transition: all 0.15s;
-    }
+    .tab { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; padding: 7px 14px; border-radius: 5px; border: 0.5px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; }
     .tab.active, .tab:hover { background: var(--dark4); color: var(--gold); border-color: var(--border2); }
-
-    /* BOTÃO GERAR */
-    .gen-btn {
-      width: 100%; background: var(--gold); color: #000;
-      font-family: var(--sans); font-weight: 800; font-size: 13px;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      border: none; border-radius: 8px; padding: 16px;
-      cursor: pointer; transition: all 0.2s; margin-top: 1rem;
-      position: relative; overflow: hidden;
-    }
+    .gen-btn { width: 100%; background: var(--gold); color: #000; font-family: var(--sans); font-weight: 800; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s; margin-top: 1rem; position: relative; overflow: hidden; }
     .gen-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%); }
     .gen-btn:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
     .gen-btn:active { transform: scale(0.99); }
-
-    /* OUTPUT */
-    .output-card {
-      background: var(--dark2);
-      border: 0.5px solid var(--border2);
-      border-radius: 12px;
-      overflow: hidden;
-      animation: fadeIn 0.3s ease;
-    }
+    .output-card { background: var(--dark2); border: 0.5px solid var(--border2); border-radius: 12px; overflow: hidden; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    .output-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 16px; border-bottom: 0.5px solid var(--border);
-    }
+    .output-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 0.5px solid var(--border); }
     .output-label { font-family: var(--mono); font-size: 11px; color: var(--gold); }
-    .copy-btn {
-      font-family: var(--mono); font-size: 10px; text-transform: uppercase;
-      letter-spacing: 0.08em; background: var(--dark4);
-      border: 0.5px solid var(--border); color: var(--muted);
-      padding: 5px 12px; border-radius: 4px; cursor: pointer; transition: all 0.15s;
-    }
+    .copy-btn { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; background: var(--dark4); border: 0.5px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
     .copy-btn:hover { color: var(--gold); border-color: var(--border2); }
     .copy-btn.ok { color: #5CB85C; border-color: #5CB85C; }
-
-    .output-body {
-      padding: 1.25rem; font-family: var(--mono); font-size: 12px;
-      color: #C8C0B0; line-height: 1.8; white-space: pre-wrap;
-      word-break: break-word; max-height: 380px; overflow-y: auto;
-      scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
-    }
-
-    .empty-state {
-      text-align: center; padding: 3rem;
-      font-family: var(--mono); font-size: 11px; color: var(--muted);
-    }
+    .output-body { padding: 1.25rem; font-family: var(--mono); font-size: 12px; color: #C8C0B0; line-height: 1.8; white-space: pre-wrap; word-break: break-word; max-height: 380px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
+    .empty-state { text-align: center; padding: 3rem; font-family: var(--mono); font-size: 11px; color: var(--muted); }
     .empty-icon { font-size: 32px; margin-bottom: 1rem; opacity: 0.4; }
   </style>
 </head>
 <body>
-
-<!-- LOADING -->
 <div id="loading">
   <div class="spin"></div>
   <p>Verificando acesso...</p>
 </div>
-
-<!-- APP -->
 <div id="app">
   <nav class="topbar">
     <div class="topbar-left">
@@ -206,12 +83,9 @@
       <button class="logout-btn" onclick="sair()">Sair</button>
     </div>
   </nav>
-
   <div class="main">
     <div class="page-title">Gerador de Leads</div>
     <div class="page-sub">Configure, gere o script e cole na extensão Claude no Chrome</div>
-
-    <!-- CONFIG -->
     <div class="config-card">
       <div class="config-title">01 · Segmento & Localização</div>
       <div class="grid2" style="margin-bottom:12px">
@@ -281,7 +155,6 @@
         </div>
       </div>
     </div>
-
     <div class="config-card">
       <div class="config-title">02 · Tipo de script</div>
       <div class="tabs">
@@ -293,10 +166,7 @@
         Coleta Nome, Telefone, Endereço, Avaliação, Site e Link — retorna tabela + CSV prontos para importar no CRM.
       </div>
     </div>
-
     <button class="gen-btn" onclick="gerarScript()">⚡ GERAR SCRIPT PARA O CLAUDE</button>
-
-    <!-- OUTPUT -->
     <div style="margin-top:1.5rem" id="output-wrap">
       <div class="output-card">
         <div class="output-header">
@@ -311,10 +181,8 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
-
 <script>
   const { createClient } = supabase;
   const sb = createClient(
@@ -324,8 +192,14 @@
 
   let tipoAtivo = 'extracao';
 
-  // ——— PROTEÇÃO DE ACESSO ———
   (async () => {
+    const hash = window.location.hash;
+    const params = new URLSearchParams(window.location.search);
+
+    if (hash.includes('access_token') || params.get('access_token')) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
     const { data: { session } } = await sb.auth.getSession();
 
     if (!session) {
@@ -333,7 +207,10 @@
       return;
     }
 
-    // Verifica status da assinatura
+    if (hash.includes('access_token')) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+
     try {
       const res = await fetch('/api/verificar-email', {
         method: 'POST',
@@ -341,21 +218,17 @@
         body: JSON.stringify({ email: session.user.email })
       });
       const data = await res.json();
-
       if (!data.ativo) {
         await sb.auth.signOut();
         window.location.href = '/index.html';
         return;
       }
-    } catch(e) {
-      // Se a API falhar, deixa entrar (evita bloqueio por erro técnico)
-    }
+    } catch(e) {}
 
     document.getElementById('user-email').innerText = session.user.email;
     document.getElementById('loading').style.display = 'none';
     document.getElementById('app').style.display = 'block';
 
-    // Atualiza ultimo_acesso
     await fetch('/api/verificar-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -363,7 +236,6 @@
     }).catch(() => {});
   })();
 
-  // ——— ANTI-CÓPIA ———
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12') e.preventDefault();
@@ -398,10 +270,8 @@
 
     if (tipoAtivo === 'extracao') {
       script = `Você é um assistente de prospecção comercial especializado em consórcio.\n\nTAREFA:\nAcesse o Google Maps (maps.google.com) e pesquise por "${seg} ${cid}". Role os resultados e colete os dados das ${qtd} primeiras empresas encontradas.\n\nPARA CADA LEAD, EXTRAIA:\n- Nome da empresa ou profissional\n- Telefone (com DDD)\n- Endereço completo\n- Avaliação Google (estrelas)\n- Link do perfil no Maps\n- Site (se disponível)\n\nFORMATO DE SAÍDA:\nTabela: Nome | Telefone | Endereço | Avaliação | Site | Link Maps\n\nCRITÉRIOS:\n- Avaliação mínima: ${aval} estrelas\n- Descarte resultados sem telefone\n- Ordene por avaliação (maior primeiro)\n- Marque ✓ os que têm site próprio\n\nApós a tabela, gere versão CSV para importar em CRM ou planilha.${modo === 'ambos' ? '\n\nCOMPLEMENTO: Após o Maps, execute também:\n1. "'+seg+' '+cid+' WhatsApp"\n2. site:linkedin.com "'+seg+'" "'+cid+'"\nAdicione novos contatos sem duplicar.' : ''}`;
-
     } else if (tipoAtivo === 'abordagem') {
       script = `Você é um estrategista comercial de consórcio de alto nível.\n\nSegmento: ${seg} | Cidade: ${cid}\n\nMISSÃO:\nPara cada lead, gere mensagem personalizada de primeiro contato via WhatsApp para venda de consórcio (imóvel, veículo ou serviços — adapte ao perfil).\n\nESTRUTURA DA MENSAGEM:\n1. Abertura com nome + referência ao negócio\n2. Gancho de valor específico para o segmento\n3. Prova social ou dado de autoridade\n4. CTA direto: resposta simples de interesse\n\nTOM: Direto, premium, sem parecer spam. Máximo 5 linhas.\n\nGere 3 versões (A/B/C) para teste.\n\nApós, crie sequência de follow-up para quem não responde em 48h.`;
-
     } else {
       script = `Você é meu assistente de prospecção de consórcio. Execute em sequência:\n\n═══ FASE 1 — EXTRAÇÃO ═══\nMaps: "${seg} ${cid}" → colete ${qtd} leads\nDados: Nome | Telefone | Endereço | Avaliação | Site\nCritério: avaliação ≥ ${aval} estrelas, com telefone.\n\n═══ FASE 2 — QUALIFICAÇÃO ═══\n🔴 Alta — empresa estabelecida, boa avaliação, site próprio\n🟡 Média — perfil mediano\n⚪ Baixa — sem telefone ou avaliação ruim\n\n═══ FASE 3 — SCRIPTS WHATSAPP ═══\nPara leads 🔴 Alta prioridade:\n- Produto: consórcio imóvel (até R$500k) ou veículo (até R$200k)\n- Tom: premium, direto, sem parecer genérico\n- CTA: resposta simples de interesse\n- Gere 3 versões A/B/C\n\n═══ FASE 4 — PLANILHA ═══\nNome | Telefone | Prioridade | Mensagem A | Status | Data Contato\n\nInicie a Fase 1 e aguarde confirmação para continuar.`;
     }
