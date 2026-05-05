@@ -1,5 +1,4 @@
 const { createClient } = require('@supabase/supabase-js');
-
 const sb = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
@@ -12,7 +11,15 @@ module.exports = async function handler(req, res) {
 
   try {
     const { event, data } = req.body;
-    const email = data?.buyer?.email?.toLowerCase().trim();
+
+    // Busca email em múltiplos campos — Hotmart muda dependendo do evento
+    const email = (
+      data?.buyer?.email ||
+      data?.subscription?.subscriber?.email ||
+      data?.purchase?.buyer?.email ||
+      ''
+    ).toLowerCase().trim();
+
     const hotmartId = data?.subscription?.subscriber?.code || null;
 
     if (!email) return res.status(400).json({ erro: 'sem email' });
@@ -38,10 +45,19 @@ module.exports = async function handler(req, res) {
       await sb.from('usuarios')
         .update({ status: 'cancelado' })
         .eq('email', email);
+
+      // Bloqueia acesso no Supabase Auth também
+      const { data: users } = await sb.auth.admin.listUsers();
+      const user = users?.users?.find(u => u.email === email);
+      if (user) {
+        await sb.auth.admin.updateUserById(user.id, { ban_duration: '876600h' });
+      }
     }
 
     return res.status(200).json({ ok: true });
+
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ erro: 'Erro interno' });
   }
 };
